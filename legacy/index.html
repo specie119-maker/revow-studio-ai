@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ReVow Studio AI</title>
+  <meta name="description" content="AI Wedding & Memory Portrait Studio">
+  
+  <!-- Web App Manifest -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#D8B46A">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="./css/style.css?v=3">
+</head>
+<body>
+
+  <!-- App Container -->
+  <div id="app" class="app-container">
+    
+    <!-- Top Header -->
+    <header class="app-header" style="position: relative;">
+      <div class="logo" data-i18n="brand">ReVow Studio AI</div>
+      <button onclick="app.toggleLanguage()" class="lang-toggle-btn" style="position: absolute; right: 20px; top: 16px; background: none; border: 1px solid var(--color-gold); border-radius: 8px; padding: 4px 8px; font-size: 12px; color: var(--color-gold); cursor: pointer;">🌐 <span id="lang-indicator">KO</span> / EN</button>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="main-content" class="content-area">
+      
+      <!-- 1. Home View -->
+      <section id="view-home" class="view active home-full-layout">
+        <!-- Hero Section -->
+        <div class="hero-container">
+          <!-- Text and Upload (Left on PC) -->
+          <div class="hero-content">
+            <h1 class="hero-huge-title">Create the Photo<br>You Always Dreamed Of.</h1>
+            <p class="hero-tagline">With Just One Photo. <span style="color:var(--color-purple-accent);">Love, Once Again.</span></p>
+            <p class="hero-desc">AI creates wedding, family, pet and memory portraits.</p>
+            
+            <div class="guestcam-dropzone hero-dropzone" id="home-upload-zone" onclick="document.getElementById('home-file-main').click()" ondragover="app.handleDragOver(event)" ondrop="app.handleDrop(event)">
+              <div class="upload-overlay">
+                <span class="drop-icon">📸</span>
+                <h3>Drag your photo here<br>or click to start</h3>
+              </div>
+              <img id="home-preview-main" src="" alt="Your Photo" class="slot-img hide" style="opacity:0;">
+              <input type="file" id="home-file-main" accept="image/*" style="display:none" onchange="app.handleHomeUpload(event)">
+            </div>
+
+            <button class="btn btn-primary btn-hero-cta" id="btn-home-cta" onclick="app.handleHomeCtaClick()" data-i18n="btn_create_moment">나만의 순간 만들기</button>
+          </div>
+          
+          <!-- Mockup (Right on PC) -->
+          <div class="hero-visual">
+            <div class="mockup-wrapper">
+              <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=600&h=800" alt="AI Portrait Transformation" class="mockup-img">
+              <div class="mockup-badge">✨ AI Generated</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Steps Section -->
+        <div class="home-steps-section">
+          <div class="step-card">
+            <span class="step-num">01</span>
+            <h4>Upload Photo</h4>
+          </div>
+          <div class="step-card">
+            <span class="step-num">02</span>
+            <h4>Choose Your Moment</h4>
+          </div>
+          <div class="step-card">
+            <span class="step-num">03</span>
+            <h4>Create AI Portrait</h4>
+          </div>
+        </div>
+
+        <!-- Memory Types Cards -->
+        <div class="memory-types-section">
+          <div class="memory-card">
+            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop" alt="Wedding">
+            <h3>Wedding Again</h3>
+          </div>
+          <div class="memory-card">
+            <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?w=400&h=400&fit=crop" alt="Family">
+            <h3>Family Memory</h3>
+          </div>
+          <div class="memory-card">
+            <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400&h=400&fit=crop" alt="Pet">
+            <h3>Pet Memory</h3>
+          </div>
+          <div class="memory-card">
+            <img src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=400&h=400&fit=crop" alt="Culture">
+            <h3>Traditional Culture</h3>
+          </div>
+        </div>
+
+        <!-- Trust Section -->
+        <div class="home-trust-section">
+           <p>🔒 Your memories belong only to you.</p>
+        </div>
+      </section>
+
+      <!-- 2. Upload / Profile View -->
+      <section id="view-upload" class="view guestcam-upload-container">
+        <div class="header-back">
+          <button class="btn-icon" onclick="app.navigate('home')">←</button>
+        </div>
+        
+        <div class="page-header center">
+          <h2 data-i18n="upload_title">소중한 사진을 올려주세요.</h2>
+          <p data-i18n="upload_desc">더 자연스러운 결과를 위해 여러 장의 사진을 추가할 수 있습니다.</p>
+        </div>
+
+        <div class="guestcam-dropzone main-dropzone" onclick="document.getElementById('file-main').click()">
+           <div class="dropzone-content" id="preview-main-icon">
+              <span class="drop-icon">📸</span>
+              <h3>Drag your photo here<br>or click to start</h3>
+           </div>
+           <img id="preview-main" src="" class="slot-img hide" alt="Main Photo">
+           <input type="file" id="file-main" accept="image/*" style="display:none" onchange="app.handleProfileUpload(event, 'main')">
+           <div class="slot-badge required">Required</div>
+        </div>
+        
+        <div class="guestcam-dropzone additional-dropzone" onclick="document.getElementById('file-additional').click()">
+           <div class="dropzone-content" id="preview-additional-icon">
+              <span class="drop-icon">➕</span>
+              <h3>Add more photos (Optional)</h3>
+           </div>
+           <img id="preview-additional" src="" class="slot-img hide" alt="Additional Photos">
+           <input type="file" id="file-additional" accept="image/*" multiple style="display:none" onchange="app.handleProfileUpload(event, 'additional')">
+           <div class="slot-badge optional">Optional</div>
+        </div>
+
+        <div class="consent-checkbox">
+          <label>
+            <input type="checkbox" id="consent-check" onchange="app.toggleProfileNext()">
+            <span data-i18n="upload_consent">이 사진들의 사용 권한이 있음을 확인합니다.</span>
+          </label>
+        </div>
+
+        <div id="btn-create-profile-container" class="hide">
+          <button class="btn btn-primary full-width btn-create-profile-huge" id="btn-create-profile" disabled onclick="app.createMemoryProfile()" data-i18n="btn_create_profile">추억 프로필 만들기</button>
+        </div>
+      </section>
+
+      <!-- 2.5 Creating Profile View -->
+      <section id="view-creating-profile" class="view">
+        <div class="generating-container">
+          <div class="gold-loader"></div>
+          <h2 data-i18n="profile_creating">AI가 당신의 모습을 기억하는 중입니다.</h2>
+          <p data-i18n="profile_creating_desc">잠시만 기다려주세요.</p>
+        </div>
+      </section>
+
+      <!-- 2.6 Profile Ready View -->
+      <section id="view-profile-ready" class="view">
+        <div class="generating-container">
+          <div class="success-icon" style="font-size: 64px; margin-bottom: 20px;">✨</div>
+          <h2 data-i18n="profile_ready">프로필 생성 완료</h2>
+          <p style="margin-bottom: 30px;" data-i18n="profile_ready_desc">이제 다양한 순간을 만들 수 있습니다.</p>
+          <button class="btn btn-primary full-width" onclick="app.navigate('style')" data-i18n="btn_choose_style">시간 및 스타일 선택</button>
+        </div>
+      </section>
+      <!-- 3. Style Select View -->
+      <section id="view-style" class="view">
+        <div class="header-back">
+          <button class="btn-icon" onclick="app.navigate('upload')">←</button>
+        </div>
+        <div class="page-header">
+          <h2 data-i18n="time_title">어느 순간의 모습을 만들까요?</h2>
+          
+        </div>
+
+        <div class="option-group-header hide" style="margin-top: 0;">
+          
+        </div>
+        <div class="age-grid">
+          <div class="age-card" onclick="app.selectAgeStyle('twenties', this)">
+            <h3 data-i18n="time_20s">20대의 나</h3>
+          </div>
+          <div class="age-card" onclick="app.selectAgeStyle('thirties', this)">
+            <h3 data-i18n="time_30s">30대의 나</h3>
+          </div>
+          <div class="age-card selected" onclick="app.selectAgeStyle('current', this)" id="age-current">
+            <h3 data-i18n="time_current">지금 모습 그대로</h3>
+          </div>
+        </div>
+
+        <div class="option-group-header">
+          <h3 data-i18n="style_title">어떤 스타일로 완성할까요?</h3>
+        </div>
+        <div class="style-grid">
+          <!-- 1. Classic Wedding -->
+          <div class="style-card" onclick="app.selectOutfitStyle('classic_wedding', this)">
+            <div class="badge-popular">Popular</div>
+            <div class="style-image bg-classic">✨</div>
+            <h3 data-i18n="style_wedding">웨딩 포트레이트</h3>
+          </div>
+          <!-- 2. Korean Hanbok Wedding -->
+          <div class="style-card" onclick="app.selectOutfitStyle('korean_hanbok', this)">
+            <div class="badge-popular">Popular</div>
+            <div class="style-image bg-hanbok">🎎</div>
+            <h3 data-i18n="style_traditional">한복 / 전통 의상</h3>
+          </div>
+          <!-- 3. Modern Minimal -->
+          <div class="style-card selected" onclick="app.selectOutfitStyle('modern_minimal', this)" id="style-modern">
+            <div class="style-image bg-modern">🤍</div>
+            <h3 data-i18n="style_modern">모던 스튜디오</h3>
+          </div>
+          
+            <h3>Japanese Wedding</h3>
+            <p>Japanese traditional wedding style</p>
+          </div>
+          
+            <h3>Chinese Wedding</h3>
+            <p>Chinese traditional wedding style</p>
+          </div>
+          
+            <h3>Indian Wedding</h3>
+            <p>Indian traditional wedding style</p>
+          </div>
+          
+            <h3>Muslim Wedding</h3>
+            <p>Modest wedding attire, elegant dress</p>
+          </div>
+          
+            <h3>Custom Culture</h3>
+            <p>Describe your own cultural outfit</p>
+          </div>
+        </div>
+
+        <div id="custom-culture-input" class="custom-input-container hide" style="display:none !important;">
+          <textarea rows="2" placeholder="e.g. Vietnamese Áo dài, Scottish Kilt..." oninput="app.updateCustomPrompt(this.value)"></textarea>
+        </div>
+
+        
+
+        <div class="outfit-upload-section">
+          <div class="outfit-header">
+            <h3 data-i18n="style_custom">내 의상 이미지 올리기</h3>
+            
+          </div>
+          
+          <div class="outfit-upload-box" id="outfit-upload-box" onclick="document.getElementById('outfit-file-input').click()">
+            <div class="outfit-icon">🎨</div>
+            <span data-i18n="style_custom">내 의상 이미지 올리기</span>
+            <input type="file" id="outfit-file-input" accept="image/jpeg, image/png, image/heic" style="display:none" onchange="app.handleOutfitUpload(event)">
+          </div>
+
+          <div id="outfit-preview-container" class="outfit-preview-container hide">
+            <div class="outfit-preview">
+              <img id="outfit-preview-img" src="" alt="Outfit Reference">
+              <button class="btn-remove" onclick="app.removeOutfitReference(event)">✕</button>
+            </div>
+            <p class="preview-hint">Reference uploaded. Preset styles are bypassed.</p>
+          </div>
+
+          <p class="privacy-note-small">🔒 The outfit reference image is used only for this creation. It is not published or used for AI training.</p>
+        </div>
+
+
+        <div class="option-group-header">
+          <h3 data-i18n="ratio_title">어떤 비율로 출력할까요?</h3>
+        </div>
+        <div class="ratio-grid">
+          <div class="ratio-card selected" onclick="app.selectAspectRatio('portrait_9_16', this)" id="ratio-portrait">
+            <div class="ratio-icon"><div class="shape shape-portrait"></div></div>
+            <div class="ratio-info">
+              <h4 data-i18n="ratio_portrait">세로 (9:16)</h4>
+              <p data-i18n="ratio_portrait_desc">모바일, 릴스, 쇼츠에 최적</p>
+            </div>
+          </div>
+          <div class="ratio-card" onclick="app.selectAspectRatio('square_1_1', this)">
+            <div class="ratio-icon"><div class="shape shape-square"></div></div>
+            <div class="ratio-info">
+              <h4 data-i18n="ratio_square">정방형 (1:1)</h4>
+              <p data-i18n="ratio_square_desc">프로필, SNS 피드에 최적</p>
+            </div>
+          </div>
+          <div class="ratio-card" onclick="app.selectAspectRatio('landscape_16_9', this)">
+            <div class="ratio-icon"><div class="shape shape-landscape"></div></div>
+            <div class="ratio-info">
+              <h4 data-i18n="ratio_landscape">가로 (16:9)</h4>
+              <p data-i18n="ratio_landscape_desc">웹사이트, PC, TV 표출용</p>
+            </div>
+          </div>
+          <div class="ratio-card" onclick="app.selectAspectRatio('print_4_5', this)">
+            <div class="ratio-icon"><div class="shape shape-print"></div></div>
+            <div class="ratio-info">
+              <h4 data-i18n="ratio_print">사진 인화용 (4:5)</h4>
+              <p data-i18n="ratio_print_desc">액자, 실물 앨범 제작용</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-action hide" id="generate-action">
+          <button class="btn btn-primary full-width" onclick="app.generateDemoResult()">Generate Image</button>
+        </div>
+      </section>
+
+      <!-- 4. Generating View -->
+      <section id="view-generating" class="view">
+        <div class="generating-container">
+          <div class="gold-loader"></div>
+          <h2 data-i18n="generating_title">소중한 순간을 만들고 있습니다...</h2>
+          <p data-i18n="generating_desc">당신의 이야기가<br>새로운 사진이 되고 있습니다.</p>
+        </div>
+      </section>
+
+      <!-- 5. Result View -->
+      <section id="view-result" class="view">
+        <div class="header-back">
+          <button class="btn-icon" onclick="app.navigate('home')">✕</button>
+        </div>
+        
+        <div class="page-header center">
+          <h2 data-i18n="result_title">당신의 순간이 완성되었습니다.</h2>
+        </div>
+
+        <div class="result-image-container">
+          <div class="result-placeholder">
+            <span>Beautiful AI Portrait Here</span>
+          </div>
+        </div>
+
+        <div class="action-buttons result-actions">
+          <button class="btn btn-primary" onclick="app.saveImage()" data-i18n="btn_save_high_res">고화질 저장하기 💎</button>
+          <button class="btn btn-secondary" onclick="app.navigate('style')" data-i18n="btn_create_more">더 많은 스타일 만들기</button>
+          <button class="btn btn-outline" onclick="app.shareImage()" data-i18n="btn_share">가족과 공유하기</button>
+          <button class="btn btn-text" onclick="app.navigate('upload')" data-i18n="btn_recreate">다시 만들기</button>
+        </div>
+      </section>
+      
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+      <a href="#" class="nav-item active" onclick="app.navigate('home')">
+        <span class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+        </span>
+        <span class="label">Home</span>
+      </a>
+      <a href="#" class="nav-item" onclick="app.navigate('upload')">
+        <span class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="16"></line>
+            <line x1="8" y1="12" x2="16" y2="12"></line>
+          </svg>
+        </span>
+        <span class="label">Create</span>
+      </a>
+      <a href="#" class="nav-item" onclick="alert('Memories: Coming soon!')">
+        <span class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21 15 16 10 5 21"></polyline>
+          </svg>
+        </span>
+        <span class="label">Memories</span>
+      </a>
+      <a href="#" class="nav-item" onclick="alert('My Album: Coming soon!')">
+        <span class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+        </span>
+        <span class="label">My Album</span>
+      </a>
+    </nav>
+  </div>
+
+  <script src="./js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+"검색 노출을 위해 SEO 설정과 게시판 자동 메타 태그 생성 로직을 추가해 줘"
+
+메타 데이터 설정: 안티에게 웹사이트의 <head> 태그 내에 키워드를 넣도록 요청하세요.
+요청 문구: "안티, 우리 웹사이트의 SEO를 위해 메타 태그를 설정해 줘. 키워드는 '사진 복원', '디지털 효도', '빛바랜 사진 복구', '추억 재현', '반려동물 사진 복원'을 포함해 줘."
+sitemap.xml 및 robots.txt: 검색 엔진이 우리 사이트를 잘 긁어갈 수 있도록 파일을 생성해
+
+핵심 키워드 그룹:
+감성 키워드: #디지털효도 #부모님선물 #추억복원 #기억의기록
+기능 키워드: #사진복구 #AI사진보정 #얼굴복원 #옛날사진살리기
+요청 문구: "안티, 사용자들이 검색할 만한 키워드 리스트를 뽑아주고, 이 키워드들을 웹사이트의 alt 태그(이미지 설명)와 제목(h1, h2) 태그에 자연스럽게 녹여서 배치해 줘."
+3. '디지털 효도' 콘텐츠 전략 (홍보의 핵심)
+키워드만 넣는 것보다 '사연'이 담긴 키워드가 훨씬 더 강력합니다.
+요청 문구: "안티, '사연 공유 게시판'에 올라오는 글들이 검색 엔진에 잘 잡히도록 각 사연별로 고유한 URL과 메타 타이틀이 자동으로 생성되게 해 줘. 예를 들어, '50년 전 결혼식 사진 복원 사연'이라는 제목으로 검색하면 우리 사이트의 해당 사연 페이지가 바로 뜨게 만들어야 해."
+오후 6:28
+Prioritizing Tool Usage
+
+I'm now focusing on tool selection, emphasizing specific tools over general ones where possible. The goal is to optimize efficiency by leveraging tools like 'view_file' directly, rather than resorting to broader, less direct methods. I'm aiming for targeted actions.
+

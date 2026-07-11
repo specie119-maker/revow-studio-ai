@@ -1,0 +1,66 @@
+You are building a complete, production-ready web service. Follow this spec exactly. If a major decision is not covered here, ask me before deciding on your own.
+
+# PROJECT: ReRoom AI — an AI interior redesign service (a mini version of InteriorAI.com)
+
+## What it does
+The user uploads a photo of their room, picks a room type and an interior style, and gets a photorealistic AI-redesigned version of the same room in about 10 seconds. Demo mode allows 2 free generations. BYOK mode (the user brings their own Gemini API key) is unlimited.
+
+## Tech stack — keep it simple
+- Next.js 14+ (App Router) + TypeScript + Tailwind CSS. One repo, deployable to Vercel as-is.
+- No database, no login. All state lives in the browser (localStorage).
+- Exactly one API route: /api/generate. It calls the Google Gemini API server-side only.
+
+## Image generation — exact requirements
+- Model: gemini-3.1-flash-image-preview (Nano Banana 2), via the official @google/genai SDK.
+- Each request sends the uploaded photo as inline base64 plus this instruction template:
+  "Redesign this {roomType} interior in {style} style. Keep the room architecture — walls, windows, doors, ceiling and camera perspective — exactly the same. Replace furniture, lighting, color palette and decor to match the target style. Photorealistic interior photography, natural lighting, high detail."
+- Client-side: resize the image to max 1024px on the longest edge (canvas) before upload. Accept JPG/PNG/WebP up to 10MB.
+- The server returns the generated image as base64. The client shows generation time in seconds.
+
+## Gemini API call — copy this exact pattern. The SDK is new, so do NOT improvise from older Gemini examples.
+- Install: npm i @google/genai
+- The route must run on the Node runtime, not Edge. At the top of /api/generate add:
+  export const runtime = 'nodejs'
+  export const maxDuration = 60
+- Server-side call:
+
+  import { GoogleGenAI } from '@google/genai';
+  const ai = new GoogleGenAI({ apiKey }); // demo key from env, or the user's BYOK key
+  const res = await ai.models.generateContent({
+    model: 'gemini-3.1-flash-image-preview',
+    contents: [{ role: 'user', parts: [
+      { inlineData: { mimeType, data: base64Image } },
+      { text: instruction }
+    ]}],
+  });
+  const part = res.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
+  const imageBase64 = part?.inlineData?.data;
+
+- If there is no inlineData part in the response, treat it as a blocked or failed generation and return a Korean error message — never return an empty image.
+- Reject request bodies over ~8MB with a Korean message (the client-side 1024px resize should keep payloads well under this).
+
+## API key modes — BOTH are required
+1. DEMO (default): the server uses process.env.GEMINI_API_KEY. Hard limits: 2 generations per browser (localStorage counter) AND 10 per IP per day (in-memory Map on the server). When a limit is hit, show a friendly Korean message that points the user to BYOK mode.
+2. BYOK: a toggle labeled "내 API 키로 무제한 사용". The user pastes their own Gemini API key. Store it ONLY in localStorage, send it with each request, use it server-side for that single request — never log it, never store it. Add a link to https://aistudio.google.com/apikey labeled "무료 API 키 발급 (1분)".
+
+## UI — all copy in Korean. Design: clean white and black, Pretendard font, generous whitespace
+1. Hero: headline "사진 한 장으로, 우리 집을 다시 디자인하세요" + subtext + CTA button that scrolls to the tool. Include one before/after example.
+2. Tool section:
+   - Drag-and-drop upload with preview
+   - Room type chips: 거실 / 침실 / 주방 / 욕실 / 서재 / 원룸
+   - 8 style cards with emoji: 모던, 미니멀, 북유럽, 인더스트리얼, 재팬디, 미드센추리, 한옥, 호텔 라운지
+   - Generate button with a loading skeleton and rotating Korean status messages
+3. Result: a before/after slider with a draggable handle, a PNG download button, and a "다른 스타일로 다시" button.
+4. Footer: "이미지 1장 원가 약 70원 · Nano Banana 2 기준" plus a remaining-free-count badge.
+
+## Quality bar
+- Mobile responsive. Every error gets a Korean message (rate limit, invalid key, blocked image, network failure).
+- Show remaining free generations, e.g. "무료 2회 중 1회 남음".
+- Clean components, Korean code comments, a README with setup + Vercel deploy steps, and a .env.example file.
+
+## Working style
+Build in this order, and after each step show me how to run and verify it:
+1) Scaffold + hero   2) Upload + selectors   3) /api/generate with the demo key   4) BYOK mode + limits   5) Before/after slider + polish
+Never hardcode API keys — use .env.local.
+
+Start with step 1 now.

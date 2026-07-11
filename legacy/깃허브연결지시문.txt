@@ -1,0 +1,15 @@
+새 GitHub repository를 만들었습니다.
+
+Repository:
+revow-studio-ai
+
+Public repository입니다.
+
+이제 기존 beemotion-ai와 절대 연결하지 말고,
+ReVow Studio AI 프로젝트는 이 새 repository에만 연결해주세요.
+
+로컬 폴더:
+ReVowStudioAI
+
+작업 내용:
+ReVow Studio AI PWA 모바일 웹앱

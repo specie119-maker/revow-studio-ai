@@ -1,0 +1,19 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Story {
+  id         Int      @id @default(autoincrement())
+  title      String   @default("따뜻한 기억의 기록")
+  author     String
+  content    String
+  beforeImg  String
+  afterImg   String
+  likes      Int      @default(0)
+  isCuration Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}

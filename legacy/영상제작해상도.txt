@@ -1,0 +1,20 @@
+기본 고화질: 1920 × 1080
+더 선명한 홍보용: 2560 × 1440
+최고 품질/대형 화면: 3840 × 2160
+
+
+PC용 홈 히어로 이미지:
+2560 × 1440 추천
+
+PC용 홈 영상:
+1920 × 1080 또는 2560 × 1440 추천
+
+모바일용 세로 이미지/영상:
+1080 × 1920 추천
+
+
+asserts/images/home_width.png       2560 × 1440
+asserts/images/home_length.png      1080 × 1920
+
+asserts/videos/home_intro_16x9.mp4  1920 × 1080
+asserts/videos/home_intro_9x16.mp4  1080 × 1920

@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #FF7F50; /* Coral Peach */
+  --color-primary-hover: #FF6347;
+  --color-background: #FFFCF5; /* Warm Ivory */
+  --color-foreground: #4A3B32; /* Dark Sepia */
+  
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
+  --shadow-button: 0 8px 20px rgba(255, 127, 80, 0.25);
+
+  --animate-fade-in: fade-in 0.8s ease-out forwards;
+  --animate-bounce-x: bounce-x 1.5s ease-in-out 2;
+  --animate-float-up: float-up 1.2s ease-out forwards;
+
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes bounce-x {
+    0%, 100% { transform: translate(-50%, -50%); }
+    50% { transform: translate(calc(-50% + 15px), -50%); }
+  }
+  @keyframes float-up {
+    0% { transform: translateY(0) scale(0.8); opacity: 1; }
+    50% { transform: translateY(-20px) scale(1.2); opacity: 0.8; }
+    100% { transform: translateY(-40px) scale(0.9); opacity: 0; }
+  }
+}
+
+:root {
+  --background: #FFFCF5;
+  --foreground: #4A3B32;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
