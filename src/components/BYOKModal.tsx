@@ -58,7 +58,7 @@ export default function BYOKModal({ isOpen, onClose, onSave }: BYOKModalProps) {
             className="w-full px-4 py-3 rounded-xl border-2 border-background bg-background text-foreground text-sm focus:outline-none focus:border-primary/50 transition-colors mb-4"
           />
 
-          <div className="flex gap-3">
+          <div className="flex gap-3 mb-4">
             <button
               onClick={handleClear}
               className="flex-1 py-3 rounded-xl border-2 border-background text-foreground/70 font-bold text-sm hover:bg-background transition-colors"
@@ -71,6 +71,13 @@ export default function BYOKModal({ isOpen, onClose, onSave }: BYOKModalProps) {
             >
               저장하기
             </button>
+          </div>
+
+          <div className="mt-2 p-4 bg-primary/5 rounded-xl border border-primary/10 text-center">
+            <p className="text-xs text-foreground/70 mb-2">복잡한 API 설정 없이 바로 이용하고 싶다면?</p>
+            <a href="/checkout" className="block w-full py-2.5 rounded-lg bg-white border-2 border-primary text-primary font-bold text-sm shadow-sm hover:bg-primary hover:text-white transition-colors">
+              프리미엄 복원권 충전하기
+            </a>
           </div>
         </div>
       </div>

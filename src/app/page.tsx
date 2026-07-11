@@ -380,17 +380,7 @@ export default function Home() {
             </h2>
           </section>
 
-          {/* ReVow Demo Video Section */}
-          <section className="w-full max-w-2xl mx-auto mb-10 rounded-2xl overflow-hidden shadow-soft border-2 border-primary/10">
-            <video 
-              src="/assets/ReVow.mp4" 
-              autoPlay 
-              muted 
-              loop 
-              playsInline 
-              className="w-full h-auto block object-cover"
-            />
-          </section>
+
 
           {/* Core Story Cards (Main Interaction) */}
           <section className="w-full mb-10">
@@ -711,6 +701,18 @@ export default function Home() {
             <button className="w-full mt-4 py-3 bg-white border border-background rounded-xl text-xs font-bold text-foreground/50 hover:bg-background transition-colors">
               더 많은 따뜻한 이야기 보기
             </button>
+          </section>
+
+          {/* ReVow Demo Video Section (Full Width Bottom) */}
+          <section className="w-full mt-12 overflow-hidden border-t-2 border-background">
+            <video 
+              src="/assets/ReVow.mp4" 
+              autoPlay 
+              muted 
+              loop 
+              playsInline 
+              className="w-full h-auto block object-cover"
+            />
           </section>
 
         </main>
