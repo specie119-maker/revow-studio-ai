@@ -9,7 +9,9 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { ReactCompareSlider } from 'react-compare-slider';
-import BYOKModal from '@/components/BYOKModal';
+import Link from 'next/link';
+import { auth, googleProvider } from '@/lib/firebase';
+import { signInWithPopup, signOut, User } from 'firebase/auth';
 
 const LOADING_MESSAGES = [
   "소중한 추억이 조금씩 선명해집니다...",
@@ -27,10 +29,10 @@ const MOCK_PREVIEWS: Record<string, string> = {
 };
 
 const CORE_STORIES = [
-  { id: 'wedding', label: '잃어버린 웨딩 사진', icon: Heart, desc: '다시 입어보는 드레스' },
-  { id: 'family', label: '빛바랜 가족 사진', icon: Users, desc: '우리의 따뜻한 날' },
-  { id: 'graduation', label: '잊지 못할 졸업식', icon: GraduationCap, desc: '찬란했던 그 시절' },
-  { id: 'pet', label: '그리운 반려동물', icon: PawPrint, desc: '영원한 나의 친구' },
+  { id: 'wedding', label: '잃어버린 웨딩 사진', icon: Heart, desc: '다시 입어보는 드레스', color: 'bg-rose-50 border-rose-100 hover:border-rose-300' },
+  { id: 'family', label: '빛바랜 가족 사진', icon: Users, desc: '우리의 따뜻한 날', color: 'bg-orange-50 border-orange-100 hover:border-orange-300' },
+  { id: 'graduation', label: '잊지 못할 졸업식', icon: GraduationCap, desc: '찬란했던 그 시절', color: 'bg-blue-50 border-blue-100 hover:border-blue-300' },
+  { id: 'pet', label: '그리운 반려동물', icon: PawPrint, desc: '영원한 나의 친구', color: 'bg-amber-50 border-amber-100 hover:border-amber-300' },
 ];
 
 const TIME_AXIS_OPTIONS = [
@@ -79,6 +81,49 @@ export default function Home() {
   const [selectedClothing, setSelectedClothing] = useState('wedding');
   const [selectedBackground, setSelectedBackground] = useState('studio');
   
+  const [user, setUser] = useState<User | null>(null);
+  const [userTokens, setUserTokens] = useState<number>(0);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (u) => {
+      setUser(u);
+      if (u) {
+        try {
+          const res = await fetch('/api/auth/sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ firebaseUid: u.uid, email: u.email })
+          });
+          if (res.ok) {
+            const data = await res.json();
+            setUserTokens(data.user.tokens);
+          }
+        } catch (error) {
+          console.error("Token sync failed:", error);
+        }
+      } else {
+        setUserTokens(0);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleGoogleLogin = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (error) {
+      console.error('Google login failed:', error);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+  
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   
@@ -91,10 +136,7 @@ export default function Home() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const uploadSectionRef = useRef<HTMLElement>(null);
   
-  // Rate Limiting & BYOK State
-  const [freeUses, setFreeUses] = useState(2);
-  const [apiKey, setApiKey] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // Rate Limiting & BYOK State removed in favor of userTokens
   
   // Community State
   const [communityStories, setCommunityStories] = useState<any[]>(MOCK_COMMUNITY_STORIES);
@@ -117,16 +159,6 @@ export default function Home() {
 
   useEffect(() => {
     fetchStories();
-
-    const uses = localStorage.getItem("revow_free_uses");
-    if (uses !== null) {
-      setFreeUses(parseInt(uses, 10));
-    } else {
-      localStorage.setItem("revow_free_uses", "2");
-    }
-    
-    const key = localStorage.getItem("revow_gemini_key");
-    if (key) setApiKey(key);
   }, []);
 
   const handleStorySelect = (id: string) => {
@@ -171,8 +203,13 @@ export default function Home() {
       return;
     }
 
-    if (freeUses <= 0 && !apiKey) {
-      setIsModalOpen(true);
+    if (!user) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+
+    if (userTokens <= 0) {
+      alert("사용 가능한 토큰이 없습니다. 요금제 결제가 필요합니다.");
       return;
     }
     
@@ -191,7 +228,7 @@ export default function Home() {
           imageBase64: resizedBase64,
           clothing: selectedClothing,
           background: selectedBackground,
-          apiKey: apiKey
+          firebaseUid: user.uid
         })
       });
       
@@ -202,11 +239,8 @@ export default function Home() {
       }
       
       setResultImage(data.imageBase64);
-
-      if (!apiKey && freeUses > 0) {
-        const newUses = freeUses - 1;
-        setFreeUses(newUses);
-        localStorage.setItem("revow_free_uses", newUses.toString());
+      if (data.remainingTokens !== undefined) {
+        setUserTokens(data.remainingTokens);
       }
     } catch (err: any) {
       setErrorMsg(err.message);
@@ -233,12 +267,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground items-center font-sans">
-      <BYOKModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        onSave={(key) => setApiKey(key)} 
-      />
-
       {/* Write Story Modal */}
       {isWriteModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fade-in">
@@ -360,12 +388,31 @@ export default function Home() {
           <div className="text-xl font-bold tracking-tight text-foreground flex items-center gap-1">
             ReVow <span className="text-primary font-black">AI</span>
           </div>
-          <button 
-            onClick={() => setIsModalOpen(true)}
-            className="text-xs px-3 py-1.5 rounded-full bg-background font-medium hover:bg-primary hover:text-white transition-colors flex items-center gap-1"
-          >
-            설정
-          </button>
+          <div className="flex gap-2">
+            <Link href="/checkout" className="text-xs px-3 py-1.5 rounded-full bg-primary/10 text-primary font-bold hover:bg-primary/20 transition-colors flex items-center gap-1">
+              요금제
+            </Link>
+            {user && (
+              <div className="text-xs px-3 py-1.5 rounded-full bg-primary text-white font-bold flex items-center gap-1 shadow-sm">
+                토큰: {userTokens}장
+              </div>
+            )}
+            {user ? (
+              <button 
+                onClick={handleLogout}
+                className="text-xs px-3 py-1.5 rounded-full bg-background font-medium hover:bg-primary hover:text-white transition-colors flex items-center gap-1 truncate max-w-[100px]"
+              >
+                {user.displayName?.split(' ')[0] || '사용자'}님 (로그아웃)
+              </button>
+            ) : (
+              <button 
+                onClick={handleGoogleLogin}
+                className="text-xs px-3 py-1.5 rounded-full bg-primary text-white font-bold hover:bg-primary/90 transition-colors flex items-center gap-1 shadow-sm"
+              >
+                로그인
+              </button>
+            )}
+          </div>
         </header>
 
         <main className="flex-1 w-full px-6 py-8 flex flex-col items-center">
@@ -376,7 +423,7 @@ export default function Home() {
               {`함께한 시간은 충분하지만,\n정작 그날의 사진이 없으신가요?`}
             </h1>
             <h2 className="text-[13px] text-foreground/60 font-medium leading-relaxed px-4">
-              빛바랜 사진 복구부터 추억 재현까지, AI가 당신만의 따뜻한 기억으로 다시 그려드립니다.
+              빛바랜 사진 복구부터 추억 재현까지,<br/>AI가 당신만의 따뜻한 기억으로 다시 그려드립니다.
             </h2>
           </section>
 
@@ -394,7 +441,7 @@ export default function Home() {
                     className={`relative p-4 rounded-2xl flex flex-col items-center text-center transition-all duration-300 border-2 overflow-hidden ${
                       isActive 
                         ? 'border-primary bg-primary shadow-[0_8px_24px_rgba(255,127,80,0.3)] transform -translate-y-1' 
-                        : 'border-background bg-background hover:border-primary/30 hover:-translate-y-1'
+                        : `${story.color} hover:-translate-y-1`
                     }`}
                   >
                     <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 transition-colors ${isActive ? 'bg-white text-primary' : 'bg-white shadow-sm text-foreground/50'}`}>
