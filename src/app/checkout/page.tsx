@@ -4,10 +4,9 @@ import { ArrowLeft, CheckCircle2, CreditCard, Sparkles, AlertCircle, Loader2 } f
 import Script from 'next/script';
 
 const PLANS = [
-  { id: 'single', name: '기본 단품', price: 15000, desc: '사진 1장 복원 (건별 결제)', popular: false },
-  { id: 'package', name: '5장 패키지', price: 60000, originalPrice: 75000, desc: '사진 5장 묶음 (20% 할인)', popular: true },
-  { id: 'monthly', name: '월간 멤버십', price: 15000, desc: '월 15,000원 (우선권 1회 + 무제한 고화질 보관)', popular: false },
-  { id: 'yearly', name: '연간 멤버십', price: 150000, originalPrice: 180000, desc: '연 150,000원 (2개월 무료 효과)', popular: false }
+  { id: 'pack_5', name: '5장 (체험용)', price: 1000, desc: '가볍게 체험해 보세요', popular: false },
+  { id: 'pack_20', name: '20장 패키지', price: 3900, originalPrice: 5000, desc: '가장 많이 선택하는 패키지', popular: true },
+  { id: 'pack_60', name: '60장 대용량', price: 9900, originalPrice: 20000, desc: '앨범 전체를 복원할 때', popular: false }
 ];
 
 const PAY_METHODS = [

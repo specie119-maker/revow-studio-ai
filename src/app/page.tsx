@@ -706,7 +706,7 @@ export default function Home() {
           {/* ReVow Demo Video Section (Full Width Bottom) */}
           <section className="w-full mt-12 overflow-hidden border-t-2 border-background">
             <video 
-              src="/assets/ReVow.mp4" 
+              src="/asserts/ReVow.mp4" 
               autoPlay 
               muted 
               loop 
