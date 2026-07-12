@@ -30,7 +30,7 @@ const MOCK_PREVIEWS: Record<string, string> = {
 
 const CORE_STORIES = [
   { id: 'wedding', label: '잃어버린 웨딩 사진', icon: Heart, desc: '다시 입어보는 드레스 / 웨딩사진 없으신 분', color: 'bg-green-50 border-green-100 hover:border-green-300' },
-  { id: 'family', label: '빛바랜 가족 사진', icon: Users, desc: '우리의 따뜻한 날', color: 'bg-purple-50 border-purple-100 hover:border-purple-300' },
+  { id: 'family', label: '빛바랜 가족 사진', icon: Users, desc: '우리의 따뜻한 날', color: 'bg-lime-50 border-lime-100 hover:border-lime-300' },
   { id: 'graduation', label: '잊지 못할 졸업식', icon: GraduationCap, desc: '찬란했던 그 시절', color: 'bg-orange-50 border-orange-100 hover:border-orange-300' },
   { id: 'pet', label: '그리운 반려동물', icon: PawPrint, desc: '영원한 나의 친구', color: 'bg-blue-50 border-blue-100 hover:border-blue-300' },
 ];
